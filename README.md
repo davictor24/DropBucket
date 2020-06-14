@@ -1,4 +1,8 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# DropBucket
+
+DropBucket = Dropbox + S3 Bucket :)
+
+Serverless Cloud Storage service on AWS. Developed as the final project for the Udacity Cloud Developer Nanodegree.
 
 ## Available Scripts
 
