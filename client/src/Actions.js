@@ -26,13 +26,13 @@ const Actions = (props) => {
 
   let actions = []
   actions.push(
-    <li>
+    <li key="action-upload">
       <a
         onClick={uploadFile}
-        href="#"
+        href="/#"
         role="button"
       >
-        <i class="fa fa-upload" aria-hidden="true"></i>
+        <i className="fa fa-upload" aria-hidden="true"></i>
         &nbsp;Upload&nbsp;
       </a>
     </li>
@@ -40,10 +40,10 @@ const Actions = (props) => {
 
   if (selectedItems.length) {
     actions.push(
-      <li>
+      <li key="action-download">
         <a
           onClick={downloadFile}
-          href="#"
+          href="/#"
           role="button"
         >
           {icons.Download}
@@ -53,10 +53,10 @@ const Actions = (props) => {
     )
 
     actions.push(
-      <li>
+      <li key="action-delete">
         <a
           onClick={deleteFile}
-          href="#"
+          href="/#"
           role="button"
         >
           {icons.Delete}
