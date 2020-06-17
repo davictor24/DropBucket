@@ -1,13 +1,16 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import Moment from 'moment'
 import FileBrowser, {Icons} from 'react-keyed-file-browser'
 import '../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import Actions from './Actions.js';
+import { Auth0Context } from './contexts/auth0-context';
 
 class App extends React.Component {
   state = {
     files: []
   }
+
+  // auth0 = useContext(Auth0Context);
 
   async componentDidMount() {
     App.instance = this
