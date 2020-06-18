@@ -19,14 +19,14 @@ export default class FileStorage {
       await this.s3Client.headObject({
         Bucket: this.filesBucket,
         Key: fileKey
-      }).promise();
-      const fileName = fileKey.split('/').pop();
+      }).promise()
+      const fileName = fileKey.split('/').pop()
       return this.s3Client.getSignedUrl('getObject', {
         Bucket: this.filesBucket,
         Key: fileKey,
         ContentDisposition: `attachment; filename=${fileName}`,
         Expires: this.signedUrlExpireSeconds
-      });
+      })
     } catch (err) {
       return null
     }
@@ -38,5 +38,12 @@ export default class FileStorage {
       Key: fileKey,
       Expires: this.signedUrlExpireSeconds
     })
+  }
+
+  async deleteFromBucket(fileKey: string): Promise<void> {
+    await this.s3Client.deleteObject({
+      Bucket: this.filesBucket,
+      Key: fileKey,
+    }).promise()
   }
 }

@@ -12,11 +12,11 @@ const logger = createLogger('getFiles')
 export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const userId = getUserId(event)
   logger.info(`Retrieving files for user ${userId}`)
-  const fileItems = await getFiles(userId)
+  const files = await getFiles(userId)
   return {
     statusCode: 200,
     body: JSON.stringify({
-      items: fileItems
+      items: files
     })
   }
 }).use(

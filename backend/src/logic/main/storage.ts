@@ -9,3 +9,7 @@ export async function getDownloadUrl(fileKey: string): Promise<string | null> {
 export function getUploadUrl(fileKey: string): string {
   return fileStorage.getUploadUrl(fileKey)
 }
+
+export async function deleteFromBucket(fileKey: string): Promise<void> {
+  await fileStorage.deleteFromBucket(fileKey)
+}

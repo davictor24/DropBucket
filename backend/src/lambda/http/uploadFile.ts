@@ -1,29 +1,27 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
-import { UploadFileRequest } from '../../requests/UploadFileRequest'
+import { S3Event } from 'aws-lambda'
 import { uploadFile } from '../../logic/main/files'
-import { getUserId } from '../utils'
 import { createLogger } from '../../utils/logger'
-import * as middy from 'middy'
-import { cors } from 'middy/middlewares'
+import { FileItem } from '../../models/FileItem'
 
 const logger = createLogger('uploadFile')
 
-export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const newFile: UploadFileRequest = JSON.parse(event.body)
-  const userId = getUserId(event)
+export const handler = async (event: S3Event): Promise<void> => {
+  const uploadInfo = event.Records[0]
+  const lastModified = Date.parse(uploadInfo.eventTime)
+  const fileInfo = uploadInfo.s3.object
+  const sizeBytes = fileInfo.size
+  const fileKey = fileInfo.key.replace(/\+/g, " ")
+  const userId = fileKey.split('/')[0]
 
-  logger.info(`Uploading new file ${newFile} for user ${userId}`)
-  const newFileItem = await uploadFile(userId, newFile)
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      item: newFileItem
-    })
+  const newFile: FileItem = {
+    userId,
+    fileKey,
+    sizeBytes,
+    lastModified
   }
-}).use(
-  cors({
-    credentials: true
-  })
-)
+
+  await uploadFile(newFile)
+  logger.info(`Uploaded new file ${newFile} for user ${userId}`)
+}

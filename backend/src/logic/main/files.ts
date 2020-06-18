@@ -1,7 +1,5 @@
 import FilesAccess from "../data/files"
 import { FileItem } from "../../models/FileItem"
-import { UploadFileRequest } from "../../requests/UploadFileRequest"
-// import { getFileUrl } from './storage'
 
 const filesAccess = new FilesAccess()
 
@@ -18,13 +16,8 @@ export async function getFileById(userId: string, fileKey: string): Promise<File
   return await filesAccess.getFileById(userId, fileKey)
 }
 
-export async function uploadFile(userId: string, uploadFileRequest: UploadFileRequest): Promise<FileItem> {
-  const fileItem: FileItem = {
-    userId,
-    ...uploadFileRequest
-  }
-  await filesAccess.uploadFile(fileItem)
-  return fileItem
+export async function uploadFile(fileItem: FileItem): Promise<void> {
+  return await filesAccess.uploadFile(fileItem)
 }
 
 export async function deleteFile(userId: string, fileKey: string): Promise<void> {
