@@ -33,8 +33,8 @@ export async function deleteFile(idToken, fileId) {
   })
 }
 
-export async function getUploadUrl(idToken, todoId) {
-  const response = await Axios.post(`${apiEndpoint}/todos/${todoId}/attachment`, '', {
+export async function getUploadUrl(idToken, fileId) {
+  const response = await Axios.post(`${apiEndpoint}/files/${fileId}/upload`, '', {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
