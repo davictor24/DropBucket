@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import App from './App'
+import FilesPage from './FilesPage'
 
 const Actions = (props) => {
   const {
@@ -11,7 +11,7 @@ const Actions = (props) => {
   let uploadFile = async (event) => {
     event.preventDefault()
     alert(`File uploaded`)
-    console.log(App.instance.state)
+    console.log(FilesPage.instance.state)
   }
   
   let downloadFile = (event) => {
@@ -25,18 +25,20 @@ const Actions = (props) => {
   }
 
   let actions = []
-  actions.push(
-    <li key="action-upload">
-      <a
-        onClick={uploadFile}
-        href="/#"
-        role="button"
-      >
-        <i className="fa fa-upload" aria-hidden="true"></i>
-        &nbsp;Upload&nbsp;
-      </a>
-    </li>
-  )
+  if (FilesPage.instance.props.user) {
+    actions.push(
+      <li key="action-upload">
+        <a
+          onClick={uploadFile}
+          href="/#"
+          role="button"
+        >
+          <i className="fa fa-upload" aria-hidden="true"></i>
+          &nbsp;Upload&nbsp;
+        </a>
+      </li>
+    )
+  }
 
   if (selectedItems.length) {
     actions.push(

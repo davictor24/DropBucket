@@ -1,24 +1,43 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import Moment from 'moment'
 import FileBrowser, {Icons} from 'react-keyed-file-browser'
 import '../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import Actions from './Actions.js';
 
-class App extends React.Component {
+class FilesPage extends React.Component {
   state = {
-    files: []
+    files: [],
+    loadingFiles: false
+  }
+
+  constructor(props) {
+    super(props)
+    FilesPage.instance = this
   }
 
   async componentDidMount() {
-    App.instance = this
-    let files = await this.loadFiles();
-    this.setState({
-      files
-    });
+    await this.loadFilesAndSetState()
   }
 
+  // async componentDidUpdate() {
+  //   await this.loadFilesAndSetState()
+  // }
+
   componentWillUnmount() {
-    App.instance = null
+    FilesPage.instance = null
+  }
+
+  async loadFilesAndSetState() {
+    if (this.props.user) {
+      this.setState({
+        loadingFiles: true
+      });
+      let files = await this.loadFiles();
+      this.setState({
+        files,
+        loadingFiles: false
+      });
+    }
   }
 
   async loadFiles() {
@@ -64,22 +83,75 @@ class App extends React.Component {
     })
   }
 
+  isLoading() {
+    return this.props.authLoading || this.state.loadingFiles
+  }
+
   render() {
     return (
-      <div id="parentContainer">
-        <div id="mainContainer">
-          <h1 style={{fontSize: "3em"}}>DropBucket</h1>
-          <FileBrowser
-            files={this.state.files}
-            noFilesMessage="You don't have any files :("
-            icons={Icons.FontAwesome(4)}
-            actionRenderer={Actions}
-            detailRenderer={() => ''}
-          />
-        </div>
-      </div>
+      <>
+        {this.isLoading() && <div className="loading">Loading&#8230;</div>}
+
+        {!this.isLoading() && (
+          <div id="parentContainer">
+            <div id="mainContainer">
+              <header>
+                <h1 style={{fontSize: "3em"}}>DropBucket</h1>
+                {this.props.user ? (
+                  <button id="header-btn" onClick={() => this.props.logout({ returnTo: window.location.origin })}>
+                    Log out
+                  </button>
+                ) : (
+                  <button id="header-btn" onClick={this.props.loginWithRedirect}>
+                    Log in
+                  </button>
+                )}
+              </header>
+
+              <FileBrowser
+                files={this.state.files}
+                noFilesMessage="You don't have any files :("
+                icons={Icons.FontAwesome(4)}
+                actionRenderer={Actions}
+                detailRenderer={() => ''}
+              />
+            </div>
+          </div>
+        )}
+      </>
+      
+          // <>
+    //   {isLoading && <div class="loading">Loading&#8230;</div>}
+
+      
+    //   {!isLoading && !user && (
+    //     <>
+    //       <h1>Click Below!</h1>
+    //       <button onClick={loginWithRedirect} className="button is-danger">
+    //         Login
+    //       </button>
+    //     </>
+    //   )}
+      
+    //   {!isLoading && user && (
+    //     <>
+    //       <h1>You are logged in!</h1>
+    //       <p>Hello {user.name}</p>
+
+    //       {user.picture && <img src={user.picture} alt="My Avatar" />}
+    //       <hr />
+
+    //       <button
+    //         onClick={() => logout({ returnTo: window.location.origin })}
+    //         className="button is-small is-dark"
+    //       >
+    //         Logout
+    //       </button>
+    //     </>
+    //   )}
+    // </>
     )
   }
 }
 
-export default App;
+export default FilesPage;
