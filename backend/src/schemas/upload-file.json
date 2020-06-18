@@ -13,7 +13,7 @@
     "lastModified":{
       "type":"integer"
     },
-    "fileUrl":{
+    "fileKey":{
       "type":"string",
       "minLength": 1
     }
@@ -22,7 +22,7 @@
     "name",
     "sizeBytes",
     "lastModified",
-    "fileUrl"
+    "fileKey"
   ],
   "additionalProperties": false
 }
