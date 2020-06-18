@@ -123,6 +123,7 @@ functions:
       - s3:
           bucket: ${self:provider.environment.FILES_BUCKET}
           event: s3:ObjectCreated:*
+          existing: true
 
   GenerateDownloadUrl:
     handler: src/lambda/http/generateDownloadUrl.handler
@@ -203,8 +204,6 @@ resources:
             AttributeType: S
           - AttributeName: fileKey
             AttributeType: S
-          - AttributeName: sizeBytes
-            AttributeType: N
           - AttributeName: lastModified
             AttributeType: N
         KeySchema:
