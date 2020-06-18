@@ -35,6 +35,13 @@ header {
   align-items: center;
 }
 
+@media screen and (max-width: 600px) {
+  header {
+    flex-direction: column;
+    padding-bottom: 16px;
+  }
+}
+
 #header-btn {
   padding: 16px 32px;
   border: none;
@@ -55,6 +62,18 @@ header {
 
 #header-btn:focus {
   box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+}
+
+#profile-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 24px;
+}
+
+#header-btn-parent {
+  display: flex;
+  align-items: center;
 }
 
 /* Absolute Center Spinner */

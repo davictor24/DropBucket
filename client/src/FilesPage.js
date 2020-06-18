@@ -100,9 +100,12 @@ class FilesPage extends React.Component {
               <header>
                 <h1 style={{fontSize: "3em"}}>DropBucket</h1>
                 {this.props.user ? (
-                  <button id="header-btn" onClick={() => this.props.logout({ returnTo: window.location.origin })}>
-                    Log out
-                  </button>
+                  <div id="header-btn-parent">
+                    <img src={FilesPage.instance.props.user.picture} id="profile-photo" alt="Profile" />
+                    <button id="header-btn" onClick={() => this.props.logout({ returnTo: window.location.origin })}>
+                      Log out
+                    </button>
+                  </div>
                 ) : (
                   <button id="header-btn" onClick={this.props.loginWithRedirect}>
                     Log in
@@ -121,37 +124,6 @@ class FilesPage extends React.Component {
           </div>
         )}
       </>
-      
-          // <>
-    //   {isLoading && <div class="loading">Loading&#8230;</div>}
-
-      
-    //   {!isLoading && !user && (
-    //     <>
-    //       <h1>Click Below!</h1>
-    //       <button onClick={loginWithRedirect} className="button is-danger">
-    //         Login
-    //       </button>
-    //     </>
-    //   )}
-      
-    //   {!isLoading && user && (
-    //     <>
-    //       <h1>You are logged in!</h1>
-    //       <p>Hello {user.name}</p>
-
-    //       {user.picture && <img src={user.picture} alt="My Avatar" />}
-    //       <hr />
-
-    //       <button
-    //         onClick={() => logout({ returnTo: window.location.origin })}
-    //         className="button is-small is-dark"
-    //       >
-    //         Logout
-    //       </button>
-    //     </>
-    //   )}
-    // </>
     )
   }
 }
