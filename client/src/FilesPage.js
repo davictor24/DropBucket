@@ -1,13 +1,14 @@
 import React from 'react'
 import Moment from 'moment'
 import FileBrowser, {Icons} from 'react-keyed-file-browser'
-import '../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
-import Actions from './Actions.js';
+import '../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css'
+import Actions from './Actions.js'
 
 class FilesPage extends React.Component {
   state = {
     files: [],
-    loadingFiles: false
+    loadingFiles: false,
+    token: null
   }
 
   constructor(props) {
@@ -31,14 +32,24 @@ class FilesPage extends React.Component {
 
   async loadFilesAndSetState() {
     if (this.props.user) {
-      this.setState({
-        loadingFiles: true
-      });
-      let files = await this.loadFiles();
+      if (this.state.token) {
+        this.setState({
+          loadingFiles: true
+        })
+      } else {
+        let token = await this.props.getTokenSilently()
+        console.log(token)
+        this.setState({
+          loadingFiles: true,
+          token
+        })
+      }
+    
+      let files = await this.loadFiles()
       this.setState({
         files,
         loadingFiles: false
-      });
+      })
     }
   }
 
@@ -128,4 +139,4 @@ class FilesPage extends React.Component {
   }
 }
 
-export default FilesPage;
+export default FilesPage

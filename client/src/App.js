@@ -3,13 +3,14 @@ import { useAuth0 } from './contexts/auth0-context';
 import FilesPage from './FilesPage';
 
 function App() {
-  const { isLoading, user, loginWithRedirect, logout } = useAuth0();
+  const { isLoading, user, loginWithRedirect, getTokenSilently, logout } = useAuth0();
 
   return (
-    <FilesPage 
-      authLoading={isLoading} 
-      user={user} 
-      loginWithRedirect={loginWithRedirect} 
+    <FilesPage
+      authLoading={isLoading}
+      user={user}
+      loginWithRedirect={loginWithRedirect}
+      getTokenSilently={getTokenSilently}
       logout={logout} />
   );
 }
