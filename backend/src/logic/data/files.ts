@@ -36,6 +36,7 @@ export default class FilesAccess {
     }).promise()
   }
 
+  // TODO: Delete?
   async getFileById(userId: string, fileKey: string): Promise<FileItem[]> {
     const result = await this.getFileByIdQuery(userId, fileKey)
     return result.Items as unknown as FileItem[]

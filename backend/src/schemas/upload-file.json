@@ -3,13 +3,13 @@
   "title": "upload-file",
   "type":"object",
   "properties": {
-    "fileKey":{
+    "fileKeyEncoded":{
       "type":"string",
       "minLength": 1
     }
   },
   "required":[
-    "fileKey"
+    "fileKeyEncoded"
   ],
   "additionalProperties": false
 }

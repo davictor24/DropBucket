@@ -67,62 +67,7 @@ service:
             path: files
             authorizer: Auth
             cors: true
-  
-    UploadFile:
-      handler: src/lambda/http/uploadFile.handler
-      iamRoleStatementsName: UploadFile
-      iamRoleStatements:
-        - Effect: Allow
-          Action:
-            - dynamodb:PutItem
-          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FILES_TABLE}
-        - Effect: Allow
-          Action:
-            - xray:PutTraceSegments
-          Resource: "*"
-        - Effect: Allow
-          Action:
-            - logs:CreateLogStream
-            - logs:CreateLogGroup
-            - logs:PutLogEvents
-            - events:PutRule
-          Resource: "*"
-      events:
-        - http:
-            method: post
-            path: files
-            authorizer: Auth
-            cors: true
-            request:
-              schema:
-                application/json: ${file(src/schemas/upload-file.json)}
-  
-    DeleteFile:
-      handler: src/lambda/http/deleteFile.handler
-      iamRoleStatementsName: DeleteFile
-      iamRoleStatements:
-        - Effect: Allow
-          Action:
-            - dynamodb:DeleteItem
-            - dynamodb:Query
-          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FILES_TABLE}
-        - Effect: Allow
-          Action:
-            - xray:PutTraceSegments
-          Resource: "*"
-        - Effect: Allow
-          Action:
-            - logs:CreateLogStream
-            - logs:CreateLogGroup
-            - logs:PutLogEvents
-          Resource: "*"
-      events:
-        - http:
-            method: delete
-            path: files/{fileId}
-            authorizer: Auth
-            cors: true
-  
+    
     GenerateUploadUrl:
       handler: src/lambda/http/generateUploadUrl.handler
       iamRoleStatementsName: GenerateUploadUrlForFile
@@ -148,10 +93,96 @@ service:
       events:
         - http:
             method: post
-            path: files/{fileId}
+            path: files/{fileKeyEncoded}/upload
+            authorizer: Auth
+            cors: true
+            request:
+              schema:
+                application/json: ${file(src/schemas/upload-file.json)}
+    
+    UploadFile:
+      handler: src/lambda/http/uploadFile.handler
+      iamRoleStatementsName: UploadFile
+      iamRoleStatements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FILES_TABLE}
+        - Effect: Allow
+          Action:
+            - xray:PutTraceSegments
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - logs:CreateLogStream
+            - logs:CreateLogGroup
+            - logs:PutLogEvents
+            - events:PutRule
+          Resource: "*"
+      events:
+        - s3:
+            bucket: ${self:provider.environment.FILES_BUCKET}
+            event: s3:ObjectCreated:*
+
+    GenerateDownloadUrl:
+      handler: src/lambda/http/generateDownloadUrl.handler
+      iamRoleStatementsName: GenerateDownloadUrlForFile
+      iamRoleStatements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FILES_TABLE}
+        - Effect: Allow
+          Action:
+            - s3:getObject
+          Resource: arn:aws:s3:::${self:provider.environment.FILES_BUCKET}/*
+        - Effect: Allow
+          Action:
+            - xray:PutTraceSegments
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - logs:CreateLogStream
+            - logs:CreateLogGroup
+            - logs:PutLogEvents
+          Resource: "*"
+      events:
+        - http:
+            method: get
+            path: files/{fileKeyEncoded}/download
             authorizer: Auth
             cors: true
   
+    DeleteFile:
+      handler: src/lambda/http/deleteFile.handler
+      iamRoleStatementsName: DeleteFile
+      iamRoleStatements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DeleteItem
+            - dynamodb:Query
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FILES_TABLE}
+        - Effect: Allow
+          Action:
+            - s3:DeleteObject
+          Resource: arn:aws:s3:::${self:provider.environment.FILES_BUCKET}/*
+        - Effect: Allow
+          Action:
+            - xray:PutTraceSegments
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - logs:CreateLogStream
+            - logs:CreateLogGroup
+            - logs:PutLogEvents
+          Resource: "*"
+      events:
+        - http:
+            method: delete
+            path: files/{fileKeyEncoded}
+            authorizer: Auth
+            cors: true
+
   resources:
     Resources:
       GatewayResponseDefault4XX:
@@ -170,21 +201,23 @@ service:
           AttributeDefinitions:
             - AttributeName: userId
               AttributeType: S
-            - AttributeName: fileId
+            - AttributeName: fileKey
               AttributeType: S
-            - AttributeName: uploadedAt
-              AttributeType: S
+            - AttributeName: sizeBytes
+              AttributeType: N
+            - AttributeName: lastModified
+              AttributeType: N
           KeySchema:
             - AttributeName: userId
               KeyType: HASH
-            - AttributeName: fileId
+            - AttributeName: fileKey
               KeyType: RANGE
           LocalSecondaryIndexes:
             - IndexName: ${self:provider.environment.LAST_MODIFIED_INDEX}
               KeySchema:
                 - AttributeName: userId
                   KeyType: HASH
-                - AttributeName: uploadedAt
+                - AttributeName: lastModified
                   KeyType: RANGE
               Projection:
                 ProjectionType: ALL

@@ -12,6 +12,7 @@ export async function getFileByIdQuery(userId: string, fileKey: string): Promise
   return await filesAccess.getFileByIdQuery(userId, fileKey)
 }
 
+// TODO: Delete?
 export async function getFileById(userId: string, fileKey: string): Promise<FileItem[]> {
   return await filesAccess.getFileById(userId, fileKey)
 }
