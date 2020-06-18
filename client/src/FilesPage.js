@@ -19,9 +19,11 @@ class FilesPage extends React.Component {
     await this.loadFilesAndSetState()
   }
 
-  // async componentDidUpdate() {
-  //   await this.loadFilesAndSetState()
-  // }
+  async componentDidUpdate(prevProps) {
+    if (this.props.user !== prevProps.user) {
+      await this.loadFilesAndSetState()
+    }
+  }
 
   componentWillUnmount() {
     FilesPage.instance = null
