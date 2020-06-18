@@ -12,7 +12,7 @@ export const handler = async (event: S3Event): Promise<void> => {
   const lastModified = Date.parse(uploadInfo.eventTime)
   const fileInfo = uploadInfo.s3.object
   const sizeBytes = fileInfo.size
-  const fileKey = fileInfo.key.replace(/\+/g, " ")
+  const fileKey = decodeURIComponent(fileInfo.key.replace(/\+/g, " "))
   const userId = fileKey.split('/')[0]
 
   const newFile: FileItem = {
@@ -23,5 +23,5 @@ export const handler = async (event: S3Event): Promise<void> => {
   }
 
   await uploadFile(newFile)
-  logger.info(`Uploaded new file ${newFile} for user ${userId}`)
+  logger.info(`Uploaded new file ${fileKey} for user ${userId}`)
 }
