@@ -1,5 +1,5 @@
 export const config = {
   filesTable: process.env.FILES_TABLE,
-  uploadedAtIndex: process.env.UPLOADED_AT_INDEX,
+  lastModifiedIndex: process.env.LAST_MODIFIED_INDEX,
   s3Bucket: process.env.FILES_BUCKET
 }

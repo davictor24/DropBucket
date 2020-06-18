@@ -1,4 +1,3 @@
-import * as uuid from 'uuid'
 import FilesAccess from "../data/files"
 import { FileItem } from "../../models/FileItem"
 import { UploadFileRequest } from "../../requests/UploadFileRequest"
@@ -7,28 +6,27 @@ import { UploadFileRequest } from "../../requests/UploadFileRequest"
 const filesAccess = new FilesAccess()
 
 export async function getFiles(userId: string): Promise<FileItem[]> {
-    const result = await filesAccess.getFiles(userId)
-    return result
+  const result = await filesAccess.getFiles(userId)
+  return result
+}
+
+export async function getFileByIdQuery(userId: string, fileKey: string): Promise<AWS.DynamoDB.QueryOutput> {
+  return await filesAccess.getFileByIdQuery(userId, fileKey)
+}
+
+export async function getFileById(userId: string, fileKey: string): Promise<FileItem[]> {
+  return await filesAccess.getFileById(userId, fileKey)
 }
 
 export async function uploadFile(userId: string, uploadFileRequest: UploadFileRequest): Promise<FileItem> {
-    const fileId = uuid.v4()
-    const uploadedAt = new Date().toISOString()
-    const fileItem: FileItem = {
-        userId,
-        fileId,
-        uploadedAt,
-        ...uploadFileRequest,
-        fileUrl: 'dummy-file-url'
-    }
-    await filesAccess.uploadFile(fileItem)
-    return fileItem
+  const fileItem: FileItem = {
+    userId,
+    ...uploadFileRequest
+  }
+  await filesAccess.uploadFile(fileItem)
+  return fileItem
 }
 
-export async function deleteFile(userId: string, fileId: string): Promise<void> {
-    return await filesAccess.deleteFile(userId, fileId)
-}
-
-export async function getFileById(userId: string, fileId: string): Promise<AWS.DynamoDB.QueryOutput> {
-    return await filesAccess.getFileById(userId, fileId)
+export async function deleteFile(userId: string, fileKey: string): Promise<void> {
+  return await filesAccess.deleteFile(userId, fileKey)
 }

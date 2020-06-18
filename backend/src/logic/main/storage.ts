@@ -2,10 +2,10 @@ import FileStorage from '../data/storage'
 
 const fileStorage = new FileStorage()
 
-export async function getFileUrl(fileId: string): Promise<string> {
-    return await fileStorage.getFileUrl(fileId)
+export async function getDownloadUrl(fileKey: string): Promise<string | null> {
+  return await fileStorage.getDownloadUrl(fileKey)
 }
 
-export function getPresignedUrl(fileId: string): string | null {
-    return fileStorage.getPresignedUrl(fileId)
+export function getUploadUrl(fileKey: string): string {
+  return fileStorage.getUploadUrl(fileKey)
 }

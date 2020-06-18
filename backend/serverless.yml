@@ -15,7 +15,7 @@ service:
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
       FILES_TABLE: dropbucket-${self:provider.stage}
       FILES_BUCKET: dropbucket-${self:provider.stage}
-      UPLOADED_AT_INDEX: uploadedAtIndex
+      LAST_MODIFIED_INDEX: lastModifiedIndex
     stage: ${opt:stage, 'dev'}
     region: ${opt:region, 'us-east-2'}
   
@@ -50,7 +50,7 @@ service:
         - Effect: Allow
           Action:
             - dynamodb:Query
-          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FILES_TABLE}/index/${self:provider.environment.UPLOADED_AT_INDEX}
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FILES_TABLE}/index/${self:provider.environment.LAST_MODIFIED_INDEX}
         - Effect: Allow
           Action:
             - xray:PutTraceSegments
@@ -180,7 +180,7 @@ service:
             - AttributeName: fileId
               KeyType: RANGE
           LocalSecondaryIndexes:
-            - IndexName: ${self:provider.environment.UPLOADED_AT_INDEX}
+            - IndexName: ${self:provider.environment.LAST_MODIFIED_INDEX}
               KeySchema:
                 - AttributeName: userId
                   KeyType: HASH

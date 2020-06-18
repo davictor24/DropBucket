@@ -3,25 +3,12 @@
   "title": "upload-file",
   "type":"object",
   "properties": {
-    "name":{
-      "type":"string",
-      "minLength": 1
-    },
-    "sizeBytes":{
-      "type":"integer"
-    },
-    "lastModified":{
-      "type":"integer"
-    },
     "fileKey":{
       "type":"string",
       "minLength": 1
     }
   },
   "required":[
-    "name",
-    "sizeBytes",
-    "lastModified",
     "fileKey"
   ],
   "additionalProperties": false

@@ -1,8 +1,6 @@
 export interface FileItem {
   userId: string
-  fileId: string
-  name: string
+  fileKey: string
   sizeBytes: number
   lastModified: number
-  fileKey: string
 }

@@ -2,8 +2,7 @@
  * Fields in a request to upload a single file.
  */
 export interface UploadFileRequest {
-  name: string
+  fileKey: string
   sizeBytes: number
   lastModified: number
-  fileKey: string
 }
