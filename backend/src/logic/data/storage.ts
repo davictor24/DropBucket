@@ -2,8 +2,10 @@ import * as AWS from 'aws-sdk'
 import * as AWSXRay from 'aws-xray-sdk'
 import { S3 } from 'aws-sdk'
 import { config } from '../../config'
+import { createLogger } from '../../utils/logger'
 
 const XAWS = AWSXRay.captureAWS(AWS)
+const logger = createLogger('storage')
 
 export default class FileStorage {
   constructor(
@@ -24,10 +26,11 @@ export default class FileStorage {
       return this.s3Client.getSignedUrl('getObject', {
         Bucket: this.filesBucket,
         Key: fileKey,
-        ContentDisposition: `attachment; filename=${fileName}`,
+        ResponseContentDisposition: `attachment; filename="${fileName}"`,
         Expires: this.signedUrlExpireSeconds
       })
     } catch (err) {
+      logger.error('An error occurred', { error: err.message })
       return null
     }
   }

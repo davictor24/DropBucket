@@ -25,10 +25,11 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
   }
 
   logger.info(`User ${userId} generating download URL for file ${fileKey}`)
+  const downloadUrl = await getDownloadUrl(fileKey)
   return {
     statusCode: 200,
     body: JSON.stringify({
-      downloadUrl: getDownloadUrl(fileKey)
+      downloadUrl
     })
   }
 }).use(
