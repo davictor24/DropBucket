@@ -20,7 +20,7 @@ export default class FileStorage {
         Bucket: this.filesBucket,
         Key: fileKey
       }).promise();
-      const fileName = fileKey.split('\\').pop().split('/').pop();
+      const fileName = fileKey.split('/').pop();
       return this.s3Client.getSignedUrl('getObject', {
         Bucket: this.filesBucket,
         Key: fileKey,
