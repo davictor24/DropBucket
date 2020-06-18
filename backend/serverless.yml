@@ -93,7 +93,7 @@ functions:
     events:
       - http:
           method: post
-          path: files/{fileKeyEncoded}/upload
+          path: files/upload
           authorizer: Auth
           cors: true
           request:
