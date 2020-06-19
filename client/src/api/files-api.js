@@ -46,7 +46,15 @@ export async function uploadFile(token, element) {
 }
 
 export async function downloadFile(token, fileKeyUser) {
+  const { downloadUrl } = await fetch(`${apiEndpoint}/files/${fileKeyUser}/download`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  }).then(r => r.json())
+  console.log(downloadUrl)
   
+  window.open(downloadUrl, '_blank');
+  URL.revokeObjectURL(downloadUrl);
 }
 
 export async function deleteFile(token, fileKeyUser) {

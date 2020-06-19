@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import FilesPage from './FilesPage'
-import { uploadFile } from '../api/files-api.js'
+import { uploadFile, downloadFile, deleteFile } from '../api/files-api.js'
 
 const Actions = (props) => {
   const {
@@ -9,11 +9,6 @@ const Actions = (props) => {
     icons,
   } = props
 
-  let downloadFile = (event) => {
-    event.preventDefault()
-    alert(`File ${selectedItems[0].key} downloaded`)
-  }
-  
   let deleteFile = (event) => {
     event.preventDefault()
     alert(`File ${selectedItems[0].key} deleted`)
@@ -39,7 +34,10 @@ const Actions = (props) => {
     actions.push(
       <li key="action-download">
         <a
-          onClick={downloadFile}
+          onClick={async (event) => {
+            event.preventDefault()
+            await downloadFile(FilesPage.instance.state.token, selectedItems[0].key)
+          }}
           href="/#"
           role="button"
         >
