@@ -1,9 +1,9 @@
 import React from 'react'
 import Moment from 'moment'
 import FileBrowser, {Icons} from 'react-keyed-file-browser'
-import '../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css'
+import '../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css'
 import Actions from './Actions.js'
-import { apiEndpoint } from './config.js'
+import { apiEndpoint } from '../config.js'
 
 class FilesPage extends React.Component {
   state = {

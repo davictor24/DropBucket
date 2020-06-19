@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth0 } from './contexts/auth0-context';
-import FilesPage from './FilesPage';
+import FilesPage from './components/FilesPage';
 
 function App() {
   const { isLoading, user, loginWithRedirect, getTokenSilently, logout } = useAuth0();
