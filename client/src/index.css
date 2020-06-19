@@ -76,6 +76,15 @@ header {
   align-items: center;
 }
 
+#file-upload {
+  display: none;
+}
+
+#custom-file-upload {
+  color: #425363;
+  cursor: pointer;
+}
+
 /* Absolute Center Spinner */
 .loading {
   position: fixed;

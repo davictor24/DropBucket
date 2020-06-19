@@ -39,7 +39,6 @@ class FilesPage extends React.Component {
         })
       } else {
         let token = await this.props.getTokenSilently()
-        console.log(token)
         this.setState({
           loadingFiles: true,
           token
@@ -60,7 +59,6 @@ class FilesPage extends React.Component {
         'Authorization': `Bearer ${this.state.token}`
       }
     }).then(r => r.json())
-    console.log(data)
 
     let files = []
     for (let file of data.items) {
