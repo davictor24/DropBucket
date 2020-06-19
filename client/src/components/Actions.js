@@ -9,11 +9,6 @@ const Actions = (props) => {
     icons,
   } = props
 
-  let deleteFile = (event) => {
-    event.preventDefault()
-    alert(`File ${selectedItems[0].key} deleted`)
-  }
-
   let actions = []
   if (FilesPage.instance.props.user) {
     actions.push(
@@ -50,7 +45,11 @@ const Actions = (props) => {
     actions.push(
       <li key="action-delete">
         <a
-          onClick={deleteFile}
+          onClick={async (event) => {
+            event.preventDefault()
+            await deleteFile(FilesPage.instance.state.token, selectedItems[0].key)
+            // TODO: Refresh screen
+          }}
           href="/#"
           role="button"
         >

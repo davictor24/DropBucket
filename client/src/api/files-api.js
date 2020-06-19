@@ -52,11 +52,16 @@ export async function downloadFile(token, fileKeyUser) {
     },
   }).then(r => r.json())
   console.log(downloadUrl)
-  
+
   window.open(downloadUrl, '_blank');
   URL.revokeObjectURL(downloadUrl);
 }
 
 export async function deleteFile(token, fileKeyUser) {
-  
+  await fetch(`${apiEndpoint}/files/${fileKeyUser}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  })
 }
