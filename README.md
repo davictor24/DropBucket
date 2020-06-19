@@ -8,7 +8,8 @@ It allows users to
 - Sign in, for persisting their files on the Cloud.
 - Upload and delete files.
 - Download uploaded files.
-(organising uploaded files in folders is not supported yet)
+
+Organising uploaded files in folders is not supported yet.
 
 ## How it works:
 - All requests to Lambdas on the Cloud are proxied by an API Gateway.
