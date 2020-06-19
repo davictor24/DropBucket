@@ -63,7 +63,7 @@ class FilesPage extends React.Component {
       }
     
       let files = await loadFiles(this.state.token)
-      updated = files.length != this.state.files.length
+      updated = files.length !== this.state.files.length
       this.setState({
         files
       })

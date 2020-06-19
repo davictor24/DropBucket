@@ -1,3 +1,5 @@
+# TODO: Trim Lambda permissions
+
 service:
   name: dropbucket
   
