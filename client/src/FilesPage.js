@@ -3,6 +3,7 @@ import Moment from 'moment'
 import FileBrowser, {Icons} from 'react-keyed-file-browser'
 import '../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css'
 import Actions from './Actions.js'
+import { apiEndpoint } from './config.js'
 
 class FilesPage extends React.Component {
   state = {
@@ -54,46 +55,22 @@ class FilesPage extends React.Component {
   }
 
   async loadFiles() {
-    return new Promise((resolve, reject) => {
-      let files = [
-        {
-          key: 'cat in a hat.png',
-          modified: +Moment().subtract(1, 'hours'),
-          size: 1.5 * 1024 * 1024,
-        },
-        {
-          key: 'kitten_ball.png',
-          modified: +Moment().subtract(3, 'days'),
-          size: 545 * 1024,
-        },
-        {
-          key: 'elephants.png',
-          modified: +Moment().subtract(3, 'days'),
-          size: 52 * 1024,
-        },
-        {
-          key: 'funny fall.gif',
-          modified: +Moment().subtract(2, 'months'),
-          size: 13.2 * 1024 * 1024,
-        },
-        {
-          key: 'holiday.jpg',
-          modified: +Moment().subtract(25, 'days'),
-          size: 85 * 1024,
-        },
-        {
-          key: 'letter chunks.doc',
-          modified: +Moment().subtract(15, 'days'),
-          size: 480 * 1024,
-        },
-        {
-          key: 'export.pdf',
-          modified: +Moment().subtract(15, 'days'),
-          size: 4.2 * 1024 * 1024,
-        },
-      ]
-      setTimeout(() => {resolve(files)}, 0)
-    })
+    const data = await fetch(`${apiEndpoint}/files`, {
+      headers: {
+        'Authorization': `Bearer ${this.state.token}`
+      }
+    }).then(r => r.json())
+    console.log(data)
+
+    let files = []
+    for (let file of data.items) {
+      files.push({
+        key: file.fileKeyUser,
+        modified: Moment().subtract(new Date() - file.lastModified),
+        size: file.sizeBytes
+      })
+    }
+    return files;
   }
 
   isLoading() {

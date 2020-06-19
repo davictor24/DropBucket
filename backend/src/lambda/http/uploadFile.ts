@@ -13,11 +13,13 @@ export const handler = async (event: S3Event): Promise<void> => {
   const fileInfo = uploadInfo.s3.object
   const sizeBytes = fileInfo.size
   const fileKey = decodeURIComponent(fileInfo.key.replace(/\+/g, " "))
+  const fileKeyUser = fileKey.replace(/^[^\/]+\//, "")
   const userId = fileKey.split('/')[0]
 
   const newFile: FileItem = {
     userId,
     fileKey,
+    fileKeyUser,
     sizeBytes,
     lastModified
   }

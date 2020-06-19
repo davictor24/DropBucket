@@ -59,7 +59,7 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 
   const res = await Axios.get(jwksUrl);
   const pem = jwkToPem(res['data']['keys'][0])
-  var verifed = verify(token, pem, {algorithms: ['RS256']})
+  let verifed = verify(token, pem, {algorithms: ['RS256']})
   return verifed as JwtPayload
 }
 
