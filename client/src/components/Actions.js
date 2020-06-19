@@ -15,7 +15,7 @@ const Actions = (props) => {
       <li key="action-upload">
         <input id="file-upload" type="file" onChange={async (event) => {
           await uploadFile(FilesPage.instance.state.token, event.target)
-          // TODO: Refresh screen
+          FilesPage.instance.getUpdates()
         }} />
         <label htmlFor="file-upload" id="custom-file-upload">
           <i className="fa fa-upload" aria-hidden="true"></i>
@@ -48,7 +48,7 @@ const Actions = (props) => {
           onClick={async (event) => {
             event.preventDefault()
             await deleteFile(FilesPage.instance.state.token, selectedItems[0].key)
-            // TODO: Refresh screen
+            FilesPage.instance.getUpdates()
           }}
           href="/#"
           role="button"

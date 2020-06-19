@@ -17,12 +17,12 @@ class FilesPage extends React.Component {
   }
 
   async componentDidMount() {
-    await this.loadFilesAndSetState()
+    await this.loadFilesWithSpinner()
   }
 
   async componentDidUpdate(prevProps) {
     if (this.props.user !== prevProps.user) {
-      await this.loadFilesAndSetState()
+      await this.loadFilesWithSpinner()
     }
   }
 
@@ -30,7 +30,7 @@ class FilesPage extends React.Component {
     FilesPage.instance = null
   }
 
-  async loadFilesAndSetState() {
+  async loadFilesWithSpinner() {
     if (this.props.user) {
       if (this.state.token) {
         this.setState({
@@ -50,6 +50,37 @@ class FilesPage extends React.Component {
         loadingFiles: false
       })
     }
+  }
+
+  async loadFilesWithoutSpinner() {
+    let updated = false
+    if (this.props.user) {
+      if (this.state.token == null) {
+        let token = await this.props.getTokenSilently()
+        this.setState({
+          token
+        })
+      }
+    
+      let files = await loadFiles(this.state.token)
+      updated = files.length != this.state.files.length
+      this.setState({
+        files
+      })
+    }
+    return updated
+  }
+
+  // TODO: Use a WebSockets connection
+  getUpdates() {
+    let interval = 2000
+    let count = 0
+    const maxCount = 10
+    let timer = setInterval(async () => {
+      let updated = await this.loadFilesWithoutSpinner()
+      count++
+      if (count >= maxCount || updated) return clearInterval(timer)
+    }, interval)
   }
 
   isLoading() {

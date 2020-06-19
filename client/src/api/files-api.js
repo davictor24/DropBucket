@@ -34,7 +34,6 @@ export async function uploadFile(token, element) {
     },
     body: JSON.stringify(payload)
   }).then(r => r.json())
-  console.log(uploadUrl)
 
   await fetch(uploadUrl, {
     method: 'PUT',
@@ -51,7 +50,6 @@ export async function downloadFile(token, fileKeyUser) {
       'Authorization': `Bearer ${token}`
     },
   }).then(r => r.json())
-  console.log(downloadUrl)
 
   window.open(downloadUrl, '_blank');
   URL.revokeObjectURL(downloadUrl);
