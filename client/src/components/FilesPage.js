@@ -1,9 +1,8 @@
 import React from 'react'
-import Moment from 'moment'
 import FileBrowser, {Icons} from 'react-keyed-file-browser'
 import '../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css'
 import Actions from './Actions.js'
-import { apiEndpoint } from '../config.js'
+import { loadFiles } from '../api/files-api.js'
 
 class FilesPage extends React.Component {
   state = {
@@ -45,30 +44,12 @@ class FilesPage extends React.Component {
         })
       }
     
-      let files = await this.loadFiles()
+      let files = await loadFiles(this.state.token)
       this.setState({
         files,
         loadingFiles: false
       })
     }
-  }
-
-  async loadFiles() {
-    const data = await fetch(`${apiEndpoint}/files`, {
-      headers: {
-        'Authorization': `Bearer ${this.state.token}`
-      }
-    }).then(r => r.json())
-
-    let files = []
-    for (let file of data.items) {
-      files.push({
-        key: file.fileKeyUser,
-        modified: Moment().subtract(new Date() - file.lastModified),
-        size: file.sizeBytes
-      })
-    }
-    return files;
   }
 
   isLoading() {

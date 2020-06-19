@@ -1,48 +1,54 @@
 import { apiEndpoint } from '../config'
-import Axios from 'axios'
+import Moment from 'moment'
 
-export async function getFiles(idToken) {
-  console.log('Fetching files')
+export async function loadFiles(token) {
+  const data = await fetch(`${apiEndpoint}/files`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  }).then(r => r.json())
 
-  const response = await Axios.get(`${apiEndpoint}/files`, {
+  let files = []
+  for (let file of data.items) {
+    files.push({
+      key: file.fileKeyUser,
+      modified: Moment().subtract(new Date() - file.lastModified),
+      size: file.sizeBytes
+    })
+  }
+  return files;
+}
+
+export async function uploadFile(token, element) {
+  let fileKeyUser = element.value.split('\\').pop().split('/').pop()
+  let fileKeyEncoded = encodeURIComponent(fileKeyUser)
+  let payload = {fileKeyEncoded}
+  let file = element.files[0]
+  let mimeType = file.type
+
+  const { uploadUrl } = await fetch(`${apiEndpoint}/files/upload`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
+      'Authorization': `Bearer ${token}`
     },
-  })
-  console.log('Files:', response.data)
-  return response.data.items
-}
+    body: JSON.stringify(payload)
+  }).then(r => r.json())
+  console.log(uploadUrl)
 
-export async function uploadFile(idToken,newFile) {
-  const response = await Axios.post(`${apiEndpoint}/files`,  JSON.stringify(newFile), {
+  await fetch(uploadUrl, {
+    method: 'PUT',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    }
-  })
-  return response.data.item
-}
-
-export async function deleteFile(idToken, fileId) {
-  await Axios.delete(`${apiEndpoint}/files/${fileId}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    }
+      'Content-Type': mimeType,
+    },
+    body: file
   })
 }
 
-export async function getUploadUrl(idToken, fileId) {
-  const response = await Axios.post(`${apiEndpoint}/files/${fileId}/upload`, '', {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    }
-  })
-  return response.data.uploadUrl
+export async function downloadFile(token, fileKeyUser) {
+  
 }
 
-export async function uploadFile_(uploadUrl, file) {
-  await Axios.put(uploadUrl, file)
+export async function deleteFile(token, fileKeyUser) {
+  
 }
